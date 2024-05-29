@@ -2,6 +2,14 @@ from flask import Flask, request, jsonify
 import json
 from llamaapi import LlamaAPI
 import re
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access environment variables
+api_key = os.getenv("API_KEY")
 
 app = Flask(__name__)
 
@@ -9,7 +17,7 @@ app = Flask(__name__)
 @app.route('/summarize', methods=['POST'])
 def summarize_transcript():
     # Initialize the SDK
-    llama = LlamaAPI("LL-Lmp9fx2M47F3eHXSVucuFOsSanmfgUo2VMamIGlHUx4l5TyDfEHQlLvPwbOvwQ3k")
+    llama = LlamaAPI(api_key)
     if 'file' not in request.files:
         return jsonify({'error': 'No file part in the request'}), 400
 
