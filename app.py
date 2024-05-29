@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import json
 from llamaapi import LlamaAPI
 import re
@@ -18,7 +18,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 @app.route('/summarize', methods=['POST'])
-@cross_origin
 def summarize_transcript():
     # Initialize the SDK
     llama = LlamaAPI(api_key)
