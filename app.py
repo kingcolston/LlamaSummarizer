@@ -57,7 +57,9 @@ def sanitize_data(file):
             transcript = sanitize_txt_file(file)
         except:
             print('Weird text format detected. Going to try and summarize just the text..')
-            transcript = file.read().decode('utf-8').splitlines()
+            transcript = file.read().decode('utf-8')
+            transcript = transcript.splitlines()
+            print(transcript)
             return prompt_string_plain(transcript)
     elif file.filename.endswith('.json'):
         print('JSON file detected')
