@@ -33,7 +33,6 @@ def summarize_transcript():
         try:
             prompt_to_send = sanitize_data(file)
             api_request_json = {
-                "model": "llama-70b",
                 "messages": [
                     {"role": "user", "content": prompt_to_send},
                 ],
