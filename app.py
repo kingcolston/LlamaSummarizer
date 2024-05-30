@@ -53,13 +53,17 @@ def sanitize_data(file):
     transcript = None
     if file.filename.endswith('.txt'):
         print('Text file detected')
+        transcript = file.read().decode('utf-8')
+        transcript = transcript.splitlines()
         try:
-            transcript = sanitize_txt_file(file)
+            transcript = sanitize_txt_file(transcript)
         except:
             print('Weird text format detected. Going to try and summarize just the text..')
-            transcript = file.read()
-            print(transcript)
-            return prompt_string_plain(transcript)
+            try:
+                return prompt_string_plain(transcript)
+            except:
+                print('Cant do that either!')
+                return 'An unknown error has occurred', 500
     elif file.filename.endswith('.json'):
         print('JSON file detected')
         transcript = sanitize_json_file(file)
@@ -70,11 +74,9 @@ def sanitize_data(file):
 
 
 def sanitize_txt_file(file):
-    transcript = file.read().decode('utf-8')
-    transcript = transcript.splitlines()
     sanitized_data = []
     last_speaker = None
-    for line in transcript:
+    for line in file:
         if line.find('-->') > 0 or 'WEBVTT' in line or re.match('^\d+$', line):
             continue
         line = line.strip()
