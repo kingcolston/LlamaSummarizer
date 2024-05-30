@@ -56,7 +56,10 @@ def sanitize_data(file):
         transcript = file.read().decode('utf-8')
         transcript = transcript.splitlines()
         try:
-            transcript = sanitize_txt_file(transcript)
+            if request.form['isFollowUpQuestion']:
+                return prompt_follow_up_questions(transcript, request.form['followUpQuestion'])
+            else:
+                transcript = sanitize_txt_file(transcript)
         except:
             print('Weird text format detected. Going to try and summarize just the text..')
             try:
@@ -141,14 +144,16 @@ def prompt_string_plain(transcript):
     print(prompt)
     return prompt
 
-def prompt_follow_up_questions(transcript):
+
+def prompt_follow_up_questions(transcript, followUpQuestion):
     transcript_concat = ''
     for line in transcript:
         transcript_concat += f"{line}\n"
 
-    prompt = (f"Given the concise summary you just shared, answer the following question delimited by triple "
-              f"backquotes. Return your response in a professional manner, citing any piece of text as needed."
-              f"\n\n```{transcript_concat}```\n\n")
+    prompt = (f"Given the following text in the triple backquotes, answer the question below denoted after QUESTION:"
+              f"Return your response in a professional manner, citing any piece of text as needed."
+              f"\n\n```{transcript_concat}```\n\n"
+              f"QUESTION: {followUpQuestion}")
     print(prompt)
     return prompt
 
