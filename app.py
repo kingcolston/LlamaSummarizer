@@ -57,8 +57,8 @@ def sanitize_data(file):
             transcript = sanitize_txt_file(file)
         except:
             print('Weird text format detected. Going to try and summarize just the text..')
-            transcript = file.read().decode('utf-8')
-            return prompt_string(transcript)
+            transcript = file.read().decode('utf-8').splitlines()
+            return prompt_string_plain(transcript)
     elif file.filename.endswith('.json'):
         print('JSON file detected')
         transcript = sanitize_json_file(file)
@@ -126,6 +126,28 @@ def prompt_string(transcript):
     print(prompt)
     return prompt
 
+
+def prompt_string_plain(transcript):
+    transcript_concat = ''
+    for line in transcript:
+        transcript_concat += f"{line}\n"
+
+    prompt = (f"Write a concise summary of the following text delimited by triple backquotes. Return your response in "
+              f"bullet points which covers the key points of the text."
+              f"\n\n```{transcript_concat}```\n\n")
+    print(prompt)
+    return prompt
+
+def prompt_follow_up_questions(transcript):
+    transcript_concat = ''
+    for line in transcript:
+        transcript_concat += f"{line}\n"
+
+    prompt = (f"Given the concise summary you just shared, answer the following question delimited by triple "
+              f"backquotes. Return your response in a professional manner, citing any piece of text as needed."
+              f"\n\n```{transcript_concat}```\n\n")
+    print(prompt)
+    return prompt
 
 
 if __name__ == '__main__':
